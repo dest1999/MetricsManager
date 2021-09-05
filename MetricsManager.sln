@@ -1,9 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31624.102
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31612.314
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetricsManager", "MetricsManager\MetricsManager.csproj", "{2D78AA01-4CCE-45F2-B39C-69EED8F31503}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MetricsManager", "MetricsManager\MetricsManager.csproj", "{2D78AA01-4CCE-45F2-B39C-69EED8F31503}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MetricsAgent", "MetricsAgent\MetricsAgent.csproj", "{18D45DA4-03C2-4DDF-B246-A24451344D1E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetricsManagerTests", "MetricsManagerTests\MetricsManagerTests.csproj", "{D6D8829C-96A4-49C8-BCBA-AA2F1AA96D4E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetricsAgentTests", "MetricsAgentTests\MetricsAgentTests.csproj", "{9F3A805A-89ED-455F-9FBC-BAC2A820595B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +21,18 @@ Global
 		{2D78AA01-4CCE-45F2-B39C-69EED8F31503}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2D78AA01-4CCE-45F2-B39C-69EED8F31503}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2D78AA01-4CCE-45F2-B39C-69EED8F31503}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18D45DA4-03C2-4DDF-B246-A24451344D1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18D45DA4-03C2-4DDF-B246-A24451344D1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18D45DA4-03C2-4DDF-B246-A24451344D1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18D45DA4-03C2-4DDF-B246-A24451344D1E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6D8829C-96A4-49C8-BCBA-AA2F1AA96D4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6D8829C-96A4-49C8-BCBA-AA2F1AA96D4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6D8829C-96A4-49C8-BCBA-AA2F1AA96D4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6D8829C-96A4-49C8-BCBA-AA2F1AA96D4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F3A805A-89ED-455F-9FBC-BAC2A820595B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F3A805A-89ED-455F-9FBC-BAC2A820595B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F3A805A-89ED-455F-9FBC-BAC2A820595B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F3A805A-89ED-455F-9FBC-BAC2A820595B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

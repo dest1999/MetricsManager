@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MetricsManager
 {
-    public class Program
+    public class MetricsManagerMainClass
     {
         public static void Main(string[] args)
         {
