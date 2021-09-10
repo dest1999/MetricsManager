@@ -7,8 +7,8 @@ namespace MetricsAgent.Models
 {
     public class BaseMetricValue
     {
-        public int Value { get; }
-        public DateTime Time { get; }
+        public int Value { get; set; }
+        public DateTime Time { get; set; }
         public BaseMetricValue()
         {
         }

@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MetricsManager.Models;
+using NLog;
+using Microsoft.Extensions.Logging;
 
 namespace MetricsManager.Controllers
 {
@@ -12,10 +14,13 @@ namespace MetricsManager.Controllers
     [ApiController]
     public class AgentsController : ControllerBase
     {
+        private ILogger<AgentsController> _logger;
+        
         private AgentsStore _agentsStore;
 
-        public AgentsController(AgentsStore agentsStore)
+        public AgentsController(AgentsStore agentsStore, ILogger<AgentsController> logger)
         {
+            _logger = logger;
             _agentsStore = agentsStore;
         }
 
@@ -34,6 +39,8 @@ namespace MetricsManager.Controllers
         [HttpPost("register")]
         public IActionResult RegisterAgent([FromBody] AgentInfo agentInfo)
         {
+            _logger.LogDebug(1, "NLog встроен в AgentsController");
+            _logger.LogInformation($"New Agent registered with parameters: AgentId {agentInfo.AgentId}, AgentUri {agentInfo.AgentUri}");
             _agentsStore.AddNewAgent(agentInfo);
             return Ok();
         }

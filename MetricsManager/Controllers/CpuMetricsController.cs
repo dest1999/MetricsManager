@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,11 +12,21 @@ namespace MetricsManager.Controllers
     [ApiController]
     public class CpuMetricsController : ControllerBase
     {
+        private ILogger<CpuMetricsController> _logger;
+
+        public CpuMetricsController(ILogger<CpuMetricsController> logger)
+        {
+            _logger = logger;
+            
+        }
+
         //за период времени
         //URL is: localhost:port/api/cpu/metrics/agent/1/from/DD.HH:MM:SS/to/DD.HH:MM:SS
         [HttpGet("agent/{agentId}/from/{fromTime}/to/{toTime}")]
         public IActionResult GetMetricsFromAgent([FromRoute] int agentId, [FromRoute] TimeSpan fromTime, [FromRoute] TimeSpan toTime)
         {
+
+            _logger.LogInformation($"CpuMetricsController GetMetricsFromAgent agentId {agentId}, fromTime {fromTime}, toTime {toTime}");
             return Ok($"GetMetricsFromAgent method, agentId: {agentId}, fromTime: {fromTime}, toTime: {toTime}"); //возврат значений для отладки
         }
 
