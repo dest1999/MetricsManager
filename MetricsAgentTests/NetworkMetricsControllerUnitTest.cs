@@ -2,6 +2,7 @@
 using MetricsAgent.DAL;
 using MetricsAgent.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Moq;
 using System;
 using Xunit;
@@ -12,10 +13,12 @@ namespace MetricsAgentTests
     {
         private NetworkMetricsController _controller;
         private Mock<INetworkMetricsRepository> _mock;
+        private Mock<ILogger<NetworkMetricsController>> _mockLogger;
         public NetworkMetricsControllerUnitTest()
         {
             _mock = new Mock<INetworkMetricsRepository>();
-            _controller = new NetworkMetricsController(_mock.Object);
+            _mockLogger = new Mock<ILogger<NetworkMetricsController>>();
+            _controller = new NetworkMetricsController(_mockLogger.Object, _mock.Object);
         }
         [Fact]
         public void CallCreateTest()

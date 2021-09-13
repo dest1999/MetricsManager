@@ -2,6 +2,7 @@
 using MetricsAgent.DAL;
 using MetricsAgent.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Moq;
 using System;
 using Xunit;
@@ -12,10 +13,12 @@ namespace MetricsAgentTests
     {
         private RamMetricsController _controller;
         private Mock<IRamMetricsRepository> _mock;
+        private Mock<ILogger<RamMetricsController>> _mockLogger;
         public RamMetricsControllerUnitTest()
         {
             _mock = new Mock<IRamMetricsRepository>();
-            _controller = new RamMetricsController(_mock.Object);
+            _mockLogger = new Mock<ILogger<RamMetricsController>>();
+            _controller = new RamMetricsController(_mockLogger.Object, _mock.Object);
         }
 
         [Fact]

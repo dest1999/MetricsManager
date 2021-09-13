@@ -21,10 +21,7 @@ namespace MetricsAgent.Controllers
             _repository = repository;
             _logger = logger;
         }
-        public RamMetricsController(IRamMetricsRepository repository)
-        {
-            _repository = repository;
-        }
+
         [HttpPost("create")]
         public IActionResult Create([FromBody] BaseMetricValue request)
         {

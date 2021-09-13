@@ -2,6 +2,7 @@ using MetricsAgent.Controllers;
 using MetricsAgent.DAL;
 using MetricsAgent.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Moq;
 using System;
 using Xunit;
@@ -12,11 +13,13 @@ namespace MetricsAgentTests
     {
         private CpuMetricsController _controller;
         private Mock<ICpuMetricsRepository> _mock;
+        private Mock<ILogger<CpuMetricsController>> _mockLogger;
 
         public CpuMetricsControllerUnitTest()
         {
             _mock = new Mock<ICpuMetricsRepository>();
-            _controller = new CpuMetricsController(_mock.Object);
+            _mockLogger = new Mock<ILogger<CpuMetricsController>>();
+            _controller = new CpuMetricsController(_mockLogger.Object, _mock.Object);
         }
 
         [Fact]

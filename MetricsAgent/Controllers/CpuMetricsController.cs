@@ -22,11 +22,6 @@ namespace MetricsAgent.Controllers
             _logger = logger;
         }
 
-        public CpuMetricsController(ICpuMetricsRepository repository)
-        {
-            _repository = repository;
-        }
-
         [HttpPost("create")]
         public IActionResult Create([FromBody] BaseMetricValue request)
         {
