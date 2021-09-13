@@ -7,6 +7,7 @@ namespace MetricsAgent.Models
 {
     public class BaseMetricValue
     {
+        public int? Id { get; set; }
         public int Value { get; set; }
         public DateTime Time { get; set; }
         public BaseMetricValue()

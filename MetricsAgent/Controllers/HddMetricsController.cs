@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using MetricsAgent.DAL;
+using MetricsAgent.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -13,9 +15,27 @@ namespace MetricsAgent.Controllers
     public class HddMetricsController : ControllerBase
     {
         private ILogger<HddMetricsController> _logger;
-        public HddMetricsController(ILogger<HddMetricsController> logger)
+        private IHddMetricsRepository _repository;
+        public HddMetricsController(ILogger<HddMetricsController> logger, IHddMetricsRepository repository)
         {
+            _repository = repository;
             _logger = logger;
+        }
+        public HddMetricsController(IHddMetricsRepository repository)
+        {
+            _repository = repository;
+        }
+        [HttpPost("create")]
+        public IActionResult Create([FromBody] BaseMetricValue request)
+        {
+            _repository.Create(new BaseMetricValue { Time = request.Time, Value = request.Value });
+            return Ok();
+        }
+
+        [HttpGet("all")]
+        public IActionResult GetAll()
+        {
+            return Ok(_repository.GetAll());
         }
 
         [HttpGet("from/{fromTime}/to/{toTime}")]
