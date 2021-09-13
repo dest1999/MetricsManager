@@ -11,6 +11,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Data.SQLite;
+using MetricsAgent.DAL;
 
 namespace MetricsAgent
 {
@@ -26,12 +28,45 @@ namespace MetricsAgent
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllers();
+            ConfigureSqlLiteConnection(services);
+            services.AddScoped<ICpuMetricsRepository, CpuMetricsRepository>();
+            services.AddScoped<IDotNetMetricsRepository, DotNetMetricsRepository>();
+            services.AddScoped<IHddMetricsRepository, HddMetricsRepository>();
+            services.AddScoped<INetworkMetricsRepository, NetworkMetricsRepository>();
+            services.AddScoped<IRamMetricsRepository, RamMetricsRepository>();
+
             //services.AddSwaggerGen(c =>
             //{
             //    c.SwaggerDoc("v1", new OpenApiInfo { Title = "MetricsAgent", Version = "v1" });
             //});
+        }
+
+        private void ConfigureSqlLiteConnection(IServiceCollection services)
+        {
+            const string connectionString = "Data Source=metrics.db;Version=3;Pooling=true;Max Pool Size=100;";
+            var connection = new SQLiteConnection(connectionString);
+            connection.Open();
+            //PrepareSchema(connection);
+        }
+
+        private void PrepareSchema(SQLiteConnection connection)
+        {
+            using (var cmd = new SQLiteCommand(connection))
+            {
+                cmd.CommandText = "DROP TABLE IF EXISTS cpumetrics";
+                cmd.ExecuteNonQuery();
+                cmd.CommandText = @"CREATE TABLE cpumetrics(id INTEGER PRIMARY KEY, value INT, time INT)";
+                cmd.ExecuteNonQuery();
+                cmd.CommandText = @"CREATE TABLE hddmetrics(id INTEGER PRIMARY KEY, value INT, time TEXT)";
+                cmd.ExecuteNonQuery();
+                cmd.CommandText = @"CREATE TABLE dotnetmetrics(id INTEGER PRIMARY KEY, value INT, time TEXT)";
+                cmd.ExecuteNonQuery();
+                cmd.CommandText = @"CREATE TABLE networkmetrics(id INTEGER PRIMARY KEY, value INT, time TEXT)";
+                cmd.ExecuteNonQuery();
+                cmd.CommandText = @"CREATE TABLE rammetrics(id INTEGER PRIMARY KEY, value INT, time TEXT)";
+                cmd.ExecuteNonQuery();
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

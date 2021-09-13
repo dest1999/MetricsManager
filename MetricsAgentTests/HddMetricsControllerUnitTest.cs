@@ -1,5 +1,8 @@
 ﻿using MetricsAgent.Controllers;
+using MetricsAgent.DAL;
+using MetricsAgent.Models;
 using Microsoft.AspNetCore.Mvc;
+using Moq;
 using System;
 using Xunit;
 
@@ -8,24 +11,21 @@ namespace MetricsAgentTests
     public class HddMetricsControllerUnitTest
     {
         private HddMetricsController _controller;
-
+        private Mock<IHddMetricsRepository> _mock;
         public HddMetricsControllerUnitTest()
         {
-            _controller = new();
+            _mock = new Mock<IHddMetricsRepository>();
+            _controller = new HddMetricsController(_mock.Object);
         }
 
         [Fact]
-        public void GetMetricsFromAgent_ReturnsOk()
+        public void CallCreateTest()
         {
-            //arange
-            TimeSpan timeFrom = TimeSpan.FromSeconds(0);
-            TimeSpan timeTo = TimeSpan.FromSeconds(100);
+            _mock.Setup(repository => repository.Create(It.IsAny<BaseMetricValue>())).Verifiable();
 
-            //act
-            var result = _controller.GetMetric(timeFrom, timeTo);
+            var result = _controller.Create(new BaseMetricValue { Time = DateTime.Now, Value = 50 });
 
-            //assert
-            Assert.IsAssignableFrom<IActionResult>(result);
+            _mock.Verify(repository => repository.Create(It.IsAny<BaseMetricValue>()), Times.AtMostOnce());
 
         }
     }

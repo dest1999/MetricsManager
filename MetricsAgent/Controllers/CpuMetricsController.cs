@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using MetricsAgent.DAL;
+using MetricsAgent.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -13,10 +15,31 @@ namespace MetricsAgent.Controllers
     public class CpuMetricsController : ControllerBase
     {
         private ILogger<CpuMetricsController> _logger;
-        public CpuMetricsController(ILogger<CpuMetricsController> logger)
+        private ICpuMetricsRepository _repository;
+        public CpuMetricsController(ILogger<CpuMetricsController> logger, ICpuMetricsRepository repository)
         {
+            _repository = repository;
             _logger = logger;
         }
+
+        public CpuMetricsController(ICpuMetricsRepository repository)
+        {
+            _repository = repository;
+        }
+
+        [HttpPost("create")]
+        public IActionResult Create([FromBody] BaseMetricValue request)
+        {
+            _repository.Create(new BaseMetricValue { Time = request.Time, Value = request.Value });
+            return Ok();
+        }
+
+        [HttpGet("all")]
+        public IActionResult GetAll()
+        {
+            return Ok(_repository.GetAll());
+        }
+
         //за период времени
         //URL is: localhost:port/api/metrics/cpu/from/DD.HH:MM:SS/to/DD.HH:MM:SS
         [HttpGet("from/{fromTime}/to/{toTime}")]

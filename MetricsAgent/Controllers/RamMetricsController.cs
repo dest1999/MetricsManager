@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using MetricsAgent.DAL;
+using MetricsAgent.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -13,9 +15,27 @@ namespace MetricsAgent.Controllers
     public class RamMetricsController : ControllerBase
     {
         private ILogger<RamMetricsController> _logger;
-        public RamMetricsController(ILogger<RamMetricsController> logger)
+        private IRamMetricsRepository _repository;
+        public RamMetricsController(ILogger<RamMetricsController> logger, IRamMetricsRepository repository)
         {
+            _repository = repository;
             _logger = logger;
+        }
+        public RamMetricsController(IRamMetricsRepository repository)
+        {
+            _repository = repository;
+        }
+        [HttpPost("create")]
+        public IActionResult Create([FromBody] BaseMetricValue request)
+        {
+            _repository.Create(new BaseMetricValue { Time = request.Time, Value = request.Value });
+            return Ok();
+        }
+
+        [HttpGet("all")]
+        public IActionResult GetAll()
+        {
+            return Ok(_repository.GetAll());
         }
 
         [HttpGet("from/{fromTime}/to/{toTime}")]
