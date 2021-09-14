@@ -25,7 +25,7 @@ namespace MetricsAgent.Controllers
         [HttpPost("create")]
         public IActionResult Create([FromBody] BaseMetricValue request)
         {
-            _repository.Create(new BaseMetricValue { Time = request.Time, Value = request.Value });
+            _repository.Create(request);
             return Ok();
         }
 

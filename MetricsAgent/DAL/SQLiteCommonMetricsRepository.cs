@@ -42,8 +42,6 @@ namespace MetricsAgent.DAL
             connection.Open();
             using var cmd = new SQLiteCommand(connection);
 
-
-
             cmd.CommandText = $"INSERT INTO {_dbTableName}(value, time) VALUES(@value, @time)";
             cmd.Parameters.AddWithValue("@value", item.Value);
             cmd.Parameters.AddWithValue("@time", item.Time.ToString("s") );//перед записью привели время в вид YYYY-MM-DDTHH:MM:SS
@@ -82,7 +80,7 @@ namespace MetricsAgent.DAL
                     {
                         Id = reader.GetInt32(0),
                         Value = reader.GetInt32(1),
-                        Time = reader.GetDateTime(2) //TimeSpan.FromSeconds(reader.GetInt32(2))
+                        Time = reader.GetDateTime(2)
                     });
                 }
             }
@@ -115,7 +113,7 @@ namespace MetricsAgent.DAL
             }
         }
 
-        public void Update(BaseMetricValue item)//зачем сдесь это нужно?
+        public void Update(BaseMetricValue item)
         {
             using var connection = new SQLiteConnection(ConnectionString);
             using var cmd = new SQLiteCommand(connection);
