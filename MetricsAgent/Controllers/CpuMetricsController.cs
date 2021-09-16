@@ -1,4 +1,6 @@
-﻿using MetricsAgent.DAL;
+﻿using AutoMapper;
+using CommonClassesLibrary;
+using MetricsAgent.DAL;
 using MetricsAgent.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,10 +18,12 @@ namespace MetricsAgent.Controllers
     {
         private ILogger<CpuMetricsController> _logger;
         private ICpuMetricsRepository _repository;
-        public CpuMetricsController(ILogger<CpuMetricsController> logger, ICpuMetricsRepository repository)
+        private readonly IMapper _mapper;
+        public CpuMetricsController(ILogger<CpuMetricsController> logger, ICpuMetricsRepository repository, IMapper mapper)
         {
-            _repository = repository;
             _logger = logger;
+            _repository = repository;
+            _mapper = mapper;
         }
 
         [HttpPost("create")]
@@ -32,17 +36,23 @@ namespace MetricsAgent.Controllers
         [HttpGet("all")]
         public IActionResult GetAll()
         {
-            return Ok(_repository.GetAll());
+            
+            var output = _mapper.Map<List<BaseMetricDTO>>(_repository.GetAll());
+
+            return Ok(output);
         }
+
+        #region //за период времени, скорее всего использоваться не будет
 
         //за период времени
         //URL is: localhost:port/api/metrics/cpu/from/DD.HH:MM:SS/to/DD.HH:MM:SS
-        [HttpGet("from/{fromTime}/to/{toTime}")]
-        public IActionResult GetMetric([FromRoute] TimeSpan fromTime, [FromRoute] TimeSpan toTime)
-        {
-            _logger.LogInformation($"CpuMetricsController GetMetric fromTime {fromTime}, toTime {toTime}");
-            return Ok();
-        }
+        //[HttpGet("from/{fromTime}/to/{toTime}")]
+        //public IActionResult GetMetric([FromRoute] TimeSpan fromTime, [FromRoute] TimeSpan toTime)
+        //{
+        //    _logger.LogInformation($"CpuMetricsController GetMetric fromTime {fromTime}, toTime {toTime}");
+        //    return Ok();
+        //}
+        #endregion
 
 
     }

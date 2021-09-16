@@ -32,6 +32,7 @@ namespace MetricsAgent.DAL
     public abstract class SQLiteCommonMetricsRepository : ICpuMetricsRepository, IDotNetMetricsRepository, IHddMetricsRepository, INetworkMetricsRepository, IRamMetricsRepository
     {
         private const string ConnectionString = "Data Source=metrics.db;Version=3;Pooling=true;Max Pool Size=100;";
+        //Microsoft.Extensions.Configuration.IConfiguration configuration = ConnectionStrings ;
         protected string _dbTableName; //cpumetrics
         public SQLiteCommonMetricsRepository()
         {

@@ -13,6 +13,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Data.SQLite;
 using MetricsAgent.DAL;
+using AutoMapper;
 
 namespace MetricsAgent
 {
@@ -29,7 +30,9 @@ namespace MetricsAgent
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            ConfigureSqlLiteConnection(services);
+
+            services.AddSingleton(new MapperConfiguration(mapperProfile => mapperProfile.AddProfile(new MapperProfile())).CreateMapper());
+
             services.AddScoped<ICpuMetricsRepository, CpuMetricsRepository>();
             services.AddScoped<IDotNetMetricsRepository, DotNetMetricsRepository>();
             services.AddScoped<IHddMetricsRepository, HddMetricsRepository>();
@@ -47,7 +50,7 @@ namespace MetricsAgent
             const string connectionString = "Data Source=metrics.db;Version=3;Pooling=true;Max Pool Size=100;";
             var connection = new SQLiteConnection(connectionString);
             connection.Open();
-            //PrepareSchema(connection);
+            PrepareSchema(connection);
         }
 
         private void PrepareSchema(SQLiteConnection connection)
