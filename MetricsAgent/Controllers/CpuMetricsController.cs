@@ -18,7 +18,7 @@ namespace MetricsAgent.Controllers
     {
         private ILogger<CpuMetricsController> _logger;
         private ICpuMetricsRepository _repository;
-        private readonly IMapper _mapper;
+        private IMapper _mapper;
         public CpuMetricsController(ILogger<CpuMetricsController> logger, ICpuMetricsRepository repository, IMapper mapper)
         {
             _logger = logger;
@@ -36,10 +36,7 @@ namespace MetricsAgent.Controllers
         [HttpGet("all")]
         public IActionResult GetAll()
         {
-            
-            var output = _mapper.Map<List<BaseMetricDTO>>(_repository.GetAll());
-
-            return Ok(output);
+            return Ok(_mapper.Map<List<BaseMetricDTO>>(_repository.GetAll()));
         }
 
         #region //за период времени, скорее всего использоваться не будет

@@ -1,4 +1,6 @@
-﻿using MetricsAgent.DAL;
+﻿using AutoMapper;
+using CommonClassesLibrary;
+using MetricsAgent.DAL;
 using MetricsAgent.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,10 +18,12 @@ namespace MetricsAgent.Controllers
     {
         private ILogger<NetworkMetricsController> _logger;
         private INetworkMetricsRepository _repository;
-        public NetworkMetricsController(ILogger<NetworkMetricsController> logger, INetworkMetricsRepository repository)
+        private IMapper _mapper;
+        public NetworkMetricsController(ILogger<NetworkMetricsController> logger, INetworkMetricsRepository repository, IMapper mapper)
         {
-            _repository = repository;
             _logger = logger;
+            _repository = repository;
+            _mapper = mapper;
         }
 
         [HttpPost("create")]
@@ -32,7 +36,7 @@ namespace MetricsAgent.Controllers
         [HttpGet("all")]
         public IActionResult GetAll()
         {
-            return Ok(_repository.GetAll());
+            return Ok(_mapper.Map<List<BaseMetricDTO>>(_repository.GetAll()));
         }
 
 

@@ -29,6 +29,7 @@ namespace MetricsAgent
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //ConfigureSqlLiteConnection(services);
             services.AddControllers();
 
             services.AddSingleton(new MapperConfiguration(mapperProfile => mapperProfile.AddProfile(new MapperProfile())).CreateMapper());
@@ -38,7 +39,6 @@ namespace MetricsAgent
             services.AddScoped<IHddMetricsRepository, HddMetricsRepository>();
             services.AddScoped<INetworkMetricsRepository, NetworkMetricsRepository>();
             services.AddScoped<IRamMetricsRepository, RamMetricsRepository>();
-
             //services.AddSwaggerGen(c =>
             //{
             //    c.SwaggerDoc("v1", new OpenApiInfo { Title = "MetricsAgent", Version = "v1" });
@@ -59,6 +59,15 @@ namespace MetricsAgent
             {
                 cmd.CommandText = "DROP TABLE IF EXISTS cpumetrics";
                 cmd.ExecuteNonQuery();
+                cmd.CommandText = "DROP TABLE IF EXISTS hddmetrics";
+                cmd.ExecuteNonQuery();
+                cmd.CommandText = "DROP TABLE IF EXISTS dotnetmetrics";
+                cmd.ExecuteNonQuery();
+                cmd.CommandText = "DROP TABLE IF EXISTS networkmetrics";
+                cmd.ExecuteNonQuery();
+                cmd.CommandText = "DROP TABLE IF EXISTS rammetrics";
+                cmd.ExecuteNonQuery();
+
                 cmd.CommandText = @"CREATE TABLE cpumetrics(id INTEGER PRIMARY KEY, value INT, time TEXT)";
                 cmd.ExecuteNonQuery();
                 cmd.CommandText = @"CREATE TABLE hddmetrics(id INTEGER PRIMARY KEY, value INT, time TEXT)";
