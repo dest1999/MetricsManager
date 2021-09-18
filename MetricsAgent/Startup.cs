@@ -14,6 +14,10 @@ using System.Threading.Tasks;
 using System.Data.SQLite;
 using MetricsAgent.DAL;
 using AutoMapper;
+using Quartz.Spi;
+using Quartz;
+using Quartz.Impl;
+using MetricsAgent.Jobs;
 
 namespace MetricsAgent
 {
@@ -29,16 +33,36 @@ namespace MetricsAgent
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //ConfigureSqlLiteConnection(services);
+            ConfigureSqlLiteConnection(services);
             services.AddControllers();
 
             services.AddSingleton(new MapperConfiguration(mapperProfile => mapperProfile.AddProfile(new MapperProfile())).CreateMapper());
 
-            services.AddScoped<ICpuMetricsRepository, CpuMetricsRepository>();
-            services.AddScoped<IDotNetMetricsRepository, DotNetMetricsRepository>();
-            services.AddScoped<IHddMetricsRepository, HddMetricsRepository>();
-            services.AddScoped<INetworkMetricsRepository, NetworkMetricsRepository>();
-            services.AddScoped<IRamMetricsRepository, RamMetricsRepository>();
+            services.AddSingleton<IJobFactory, SingletonJobFactory>();
+            services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
+
+            services.AddSingleton<CpuMetricsJob>();
+            services.AddSingleton(new JobSchedule(jobType: typeof(CpuMetricsJob), cronExpression: "0/5 * * * * ?"));
+
+            services.AddSingleton<RamMetricsJob>();
+            services.AddSingleton(new JobSchedule(jobType: typeof(RamMetricsJob), cronExpression: "0/5 * * * * ?"));
+
+            services.AddSingleton<HddMetricsJob>();
+            services.AddSingleton(new JobSchedule(jobType: typeof(HddMetricsJob), cronExpression: "0/5 * * * * ?"));
+
+            services.AddSingleton<DotNetMetricsJob>();
+            services.AddSingleton(new JobSchedule(jobType: typeof(DotNetMetricsJob), cronExpression: "0/5 * * * * ?"));
+
+            services.AddSingleton<NetworkMetricsJob>();
+            services.AddSingleton(new JobSchedule(jobType: typeof(NetworkMetricsJob), cronExpression: "0/5 * * * * ?"));
+
+            services.AddHostedService<QuartzHostedService>();
+
+            services.AddSingleton<ICpuMetricsRepository, CpuMetricsRepository>();
+            services.AddSingleton<IDotNetMetricsRepository, DotNetMetricsRepository>();
+            services.AddSingleton<IHddMetricsRepository, HddMetricsRepository>();
+            services.AddSingleton<INetworkMetricsRepository, NetworkMetricsRepository>();
+            services.AddSingleton<IRamMetricsRepository, RamMetricsRepository>();
             //services.AddSwaggerGen(c =>
             //{
             //    c.SwaggerDoc("v1", new OpenApiInfo { Title = "MetricsAgent", Version = "v1" });
