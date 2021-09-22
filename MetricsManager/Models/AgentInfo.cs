@@ -7,8 +7,13 @@ namespace MetricsManager.Models
 {
     public class AgentInfo
     {
+        private Uri _agentUri;
+
         public int AgentId { get; set; }
-        public Uri AgentUri { get; set; }
+        public Uri AgentUri { 
+            get => _agentUri;
+            set => _agentUri = new Uri(value.ToString());
+        }
         public AgentInfo()
         {
 

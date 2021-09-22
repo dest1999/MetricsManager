@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using MetricsManager.Models;
 using NLog;
 using Microsoft.Extensions.Logging;
+using MetricsManager.DAL;
 
 namespace MetricsManager.Controllers
 {
@@ -15,13 +16,15 @@ namespace MetricsManager.Controllers
     public class AgentsController : ControllerBase
     {
         private ILogger<AgentsController> _logger;
-        
-        private AgentsStore _agentsStore;
 
-        public AgentsController(AgentsStore agentsStore, ILogger<AgentsController> logger)
+        //private AgentsStore _agentsStore;
+        private IDBAgentsRepository _dbAgentsRepository;
+
+        public AgentsController(IDBAgentsRepository dbAgentsRepository, ILogger<AgentsController> logger)
         {
             _logger = logger;
-            _agentsStore = agentsStore;
+            _logger.LogDebug(1, "NLog встроен в AgentsController");
+            _dbAgentsRepository = dbAgentsRepository;
         }
 
         [HttpPut("enable/{agentId}")]
@@ -39,16 +42,22 @@ namespace MetricsManager.Controllers
         [HttpPost("register")]
         public IActionResult RegisterAgent([FromBody] AgentInfo agentInfo)
         {
-            _logger.LogDebug(1, "NLog встроен в AgentsController");
             _logger.LogInformation($"New Agent registered with parameters: AgentId {agentInfo.AgentId}, AgentUri {agentInfo.AgentUri}");
-            _agentsStore.AddNewAgent(agentInfo);
+            _dbAgentsRepository.Create(agentInfo);
             return Ok();
         }
         
+        [HttpDelete("delete/{agentId}")]
+        public IActionResult Delete([FromRoute] int agentId)
+        {
+            _dbAgentsRepository.Delete(agentId);
+            return Ok();
+        }
+
         [HttpGet("agentslist")]
         public IActionResult GetAgentsList()
         {
-            return Ok(_agentsStore.GetAgents());
+            return Ok(_dbAgentsRepository.GetAll());
         }
 
     }

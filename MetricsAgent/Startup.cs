@@ -18,6 +18,7 @@ using Quartz.Spi;
 using Quartz;
 using Quartz.Impl;
 using MetricsAgent.Jobs;
+using System.IO;
 
 namespace MetricsAgent
 {
@@ -71,26 +72,53 @@ namespace MetricsAgent
 
         private void ConfigureSqlLiteConnection(IServiceCollection services)
         {
-            const string connectionString = "Data Source=metrics.db;Version=3;Pooling=true;Max Pool Size=100;";
+            const string connectionString = "Data Source = metrics.db;Version=3;Pooling=true;Max Pool Size=100;";
+            if (IsDataBaseExist(connectionString))
+            {
+                return;
+            }
             var connection = new SQLiteConnection(connectionString);
             connection.Open();
             PrepareSchema(connection);
+        }
+        
+        private bool IsDataBaseExist(string connectionString)
+        {
+            string dbName;
+            string[] strings = connectionString.Split(';');
+
+            foreach (var item in strings)
+            {
+                if (item.StartsWith("data ", StringComparison.OrdinalIgnoreCase) && 
+                    item.Contains("source", StringComparison.OrdinalIgnoreCase) && 
+                    item.Contains('='))
+                {
+                    dbName = item.Split('=')[^1];
+                    dbName = dbName.Trim();
+                    if (File.Exists(dbName))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
         private void PrepareSchema(SQLiteConnection connection)
         {
             using (var cmd = new SQLiteCommand(connection))
             {
-                cmd.CommandText = "DROP TABLE IF EXISTS cpumetrics";
-                cmd.ExecuteNonQuery();
-                cmd.CommandText = "DROP TABLE IF EXISTS hddmetrics";
-                cmd.ExecuteNonQuery();
-                cmd.CommandText = "DROP TABLE IF EXISTS dotnetmetrics";
-                cmd.ExecuteNonQuery();
-                cmd.CommandText = "DROP TABLE IF EXISTS networkmetrics";
-                cmd.ExecuteNonQuery();
-                cmd.CommandText = "DROP TABLE IF EXISTS rammetrics";
-                cmd.ExecuteNonQuery();
+                //cmd.CommandText = "DROP TABLE IF EXISTS cpumetrics";
+                //cmd.ExecuteNonQuery();
+                //cmd.CommandText = "DROP TABLE IF EXISTS hddmetrics";
+                //cmd.ExecuteNonQuery();
+                //cmd.CommandText = "DROP TABLE IF EXISTS dotnetmetrics";
+                //cmd.ExecuteNonQuery();
+                //cmd.CommandText = "DROP TABLE IF EXISTS networkmetrics";
+                //cmd.ExecuteNonQuery();
+                //cmd.CommandText = "DROP TABLE IF EXISTS rammetrics";
+                //cmd.ExecuteNonQuery();
 
                 cmd.CommandText = @"CREATE TABLE cpumetrics(id INTEGER PRIMARY KEY, value INT, time TEXT)";
                 cmd.ExecuteNonQuery();
