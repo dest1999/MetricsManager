@@ -8,10 +8,11 @@ namespace MetricsAgent.DAL
 {
     public interface IRepository<T> where T : BaseMetricValue
     {
-        IList<T> GetAll();
+        IList<T> GetAllAndClearValues();
         T GetById(int id);
         void Create(T item);
         void Update(T item);
         void Delete(int id);
+
     }
 }

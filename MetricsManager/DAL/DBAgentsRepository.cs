@@ -17,7 +17,6 @@ namespace MetricsManager.DAL
             collection.Insert(agent);
             collection.EnsureIndex(indexId => indexId.AgentId, true);
             db.Commit();
-            //var tmp = collection.FindAll();
         }
 
         public void Delete(int id)

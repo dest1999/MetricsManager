@@ -20,10 +20,4 @@
     <ProjectReference Include="..\CommonClasesLibrary\CommonClassesLibrary.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="metrics.db">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>

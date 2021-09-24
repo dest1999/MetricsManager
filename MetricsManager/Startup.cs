@@ -1,3 +1,4 @@
+using MetricsManager.Client;
 using MetricsManager.DAL;
 using MetricsManager.Models;
 using Microsoft.AspNetCore.Builder;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Polly;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,12 +31,18 @@ namespace MetricsManager
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddHttpClient();
-            services.AddSingleton<AgentsStore>();
-            
+            //services.AddHttpClient();
+            //services.AddSingleton<AgentsStore>();
+
+            services.AddHttpClient<IMetricsAgentClient<BaseMetricValue>, MetricsAgentClient>().
+                AddTransientHttpErrorPolicy(p => p.WaitAndRetryAsync(3, _ => TimeSpan.FromSeconds(1)) );
 
             services.AddSingleton<IDBAgentsRepository, DBAgentsRepository>();
-
+            services.AddSingleton<ICpuMetricsRepository, CpuMetricsRepository>();
+            services.AddSingleton<IDotNetMetricsRepository, DotNetMetricsRepository>();
+            services.AddSingleton<IHddMetricsRepository, HddMetricsRepository>();
+            services.AddSingleton<INetworkMetricsRepository, NetworkMetricsRepository>();
+            services.AddSingleton<IRamMetricsRepository, RamMetricsRepository>();
 
             //services.AddSwaggerGen(c =>
             //{

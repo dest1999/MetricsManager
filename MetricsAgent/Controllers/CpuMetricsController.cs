@@ -36,7 +36,8 @@ namespace MetricsAgent.Controllers
         [HttpGet("all")]
         public IActionResult GetAll()
         {
-            return Ok(_mapper.Map<List<BaseMetricDTO>>(_repository.GetAll()));
+            var returnCollection = _mapper.Map<List<BaseMetricDTO>>(_repository.GetAllAndClearValues());
+            return Ok(returnCollection);
         }
 
         #region //за период времени, скорее всего использоваться не будет

@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using MetricsAgent.DAL;
 using Microsoft.Extensions.Hosting;
 using Quartz;
 using Quartz.Spi;
 
-namespace MetricsAgent
+namespace MetricsManager.Jobs
 {
     public class QuartzHostedService : IHostedService
     {
