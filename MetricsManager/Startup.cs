@@ -1,5 +1,6 @@
 using MetricsManager.Client;
 using MetricsManager.DAL;
+using MetricsManager.Jobs;
 using MetricsManager.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -11,6 +12,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Polly;
+using Quartz;
+using Quartz.Impl;
+using Quartz.Spi;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,11 +35,14 @@ namespace MetricsManager
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            //services.AddHttpClient();
-            //services.AddSingleton<AgentsStore>();
+            services.AddHttpClient<IMetricsAgentClient<BaseMetricValue>, MetricsAgentClient>()
+                .AddTransientHttpErrorPolicy(p => p.WaitAndRetryAsync(3, _ => TimeSpan.FromSeconds(1)) );
 
-            services.AddHttpClient<IMetricsAgentClient<BaseMetricValue>, MetricsAgentClient>().
-                AddTransientHttpErrorPolicy(p => p.WaitAndRetryAsync(3, _ => TimeSpan.FromSeconds(1)) );
+            services.AddSingleton<IJobFactory, SingletonJobFactory>();
+            services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
+            services.AddSingleton<GetMetricsJob>();
+            services.AddSingleton(new JobSchedule(jobType: typeof(GetMetricsJob), cronExpression: "0 0/30 * * * ?"));//собираем метрики с агентов раз в 30 минут
+            services.AddHostedService<QuartzHostedService>();
 
             services.AddSingleton<IDBAgentsRepository, DBAgentsRepository>();
             services.AddSingleton<ICpuMetricsRepository, CpuMetricsRepository>();

@@ -6,6 +6,7 @@ namespace MetricsManager.DAL
     {
         IList<T> GetAll();
         void Create(T item);
+        void CreateSequence(IList<T> item);
         void Update(T item);
         void Delete(int id);
     }

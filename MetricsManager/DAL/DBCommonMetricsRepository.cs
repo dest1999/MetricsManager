@@ -35,6 +35,16 @@ namespace MetricsManager.DAL
             db.Commit();
         }
 
+        public void CreateSequence(IList<BaseMetricValue> item)
+        {
+            using var db = new LiteDatabase(_dbname);
+            var collection = db.GetCollection<BaseMetricValue>(_collectionName);
+            collection.InsertBulk(item);
+            collection.EnsureIndex(indexId => indexId.AgentId);
+            collection.EnsureIndex(indexId => indexId.Time);
+            db.Commit();
+        }
+
         public void Delete(int id)
         {
             using var db = new LiteDatabase(_dbname);

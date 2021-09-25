@@ -36,7 +36,7 @@ namespace MetricsAgent.Controllers
         [HttpGet("all")]
         public IActionResult GetAll()
         {
-            var returnCollection = _mapper.Map<List<BaseMetricDTO>>(_repository.GetAllAndClearValues());
+            var returnCollection = _mapper.Map<List<BaseMetricDTO>>(_repository.GetAllAndClearTable());
             return Ok(returnCollection);
         }
 

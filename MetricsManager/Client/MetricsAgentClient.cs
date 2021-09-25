@@ -1,4 +1,6 @@
-﻿using MetricsManager.Models;
+﻿using CommonClassesLibrary;
+using MetricsManager.Models;
+using Microsoft.Extensions.Logging;
 using NLog;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -9,33 +11,31 @@ namespace MetricsManager.Client
     public class MetricsAgentClient : IMetricsAgentClient<BaseMetricValue>
     {
         private HttpClient _httpClient;
-        private ILogger _logger;
+        private ILogger<MetricsAgentClient> _logger;
 
-        public MetricsAgentClient(HttpClient httpClient, ILogger logger)
+        public MetricsAgentClient(HttpClient httpClient, ILogger<MetricsAgentClient> logger)
         {
             _httpClient = httpClient;
             _logger = logger;
         }
 
 
-        public IList<BaseMetricValue> GetCpuMetrics(AgentInfo agent)
+        private IList<BaseMetricValue> CommonMetricsGetter(AgentInfo agent, HttpRequestMessage httpRequest)
         {
-            var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"{agent.AgentUri}:5000/api/metrics/cpu/all");       //http://localhost:5000/api/metrics/cpu/all
+            HttpResponseMessage httpResponse = _httpClient.SendAsync(httpRequest).Result;
 
             try
             {
-                HttpResponseMessage httpResponse = _httpClient.SendAsync(httpRequest).Result;
                 using var responseStream = httpResponse.Content.ReadAsStreamAsync().Result;
-                
-                var tmp1 = JsonSerializer.DeserializeAsync<BaseMetricValue>(responseStream).Result;
 
-                var tmp2 = (IList<BaseMetricValue>)tmp1;
+                var metricsCollection = JsonSerializer.DeserializeAsync<List<BaseMetricValue>>(responseStream, new JsonSerializerOptions(JsonSerializerDefaults.Web)).Result;
 
-                return tmp2;
+                foreach (var item in metricsCollection)
+                {
+                    item.AgentId = agent.AgentId;
+                }
 
-                //return (IList<BaseMetricValue>)JsonSerializer.DeserializeAsync<BaseMetricValue>(responseStream).Result;
-
-
+                return metricsCollection;
 
             }
             catch (System.Exception)
@@ -43,30 +43,43 @@ namespace MetricsManager.Client
 
                 throw;
             }
+        }
 
 
+        public IList<BaseMetricValue> GetCpuMetrics(AgentInfo agent)
+        {
+            var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"{agent.AgentUri}api/metrics/cpu/all");       //http://localhost:5000/api/metrics/cpu/all
 
+            return CommonMetricsGetter(agent, httpRequest);
 
         }
 
         public IList<BaseMetricValue> GetDotNetMetrics(AgentInfo agent)
         {
-            throw new System.NotImplementedException();
+            var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"{agent.AgentUri}api/metrics/dotnet/errors-count/all");
+
+            return CommonMetricsGetter(agent, httpRequest);
         }
 
         public IList<BaseMetricValue> GetHddMetrics(AgentInfo agent)
         {
-            throw new System.NotImplementedException();
+            var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"{agent.AgentUri}api/metrics/hdd/left/all");
+
+            return CommonMetricsGetter(agent, httpRequest);
         }
 
         public IList<BaseMetricValue> GetNetworkMetrics(AgentInfo agent)
         {
-            throw new System.NotImplementedException();
+            var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"{agent.AgentUri}api/metrics/network/all");
+
+            return CommonMetricsGetter(agent, httpRequest);
         }
 
         public IList<BaseMetricValue> GetRamMetrics(AgentInfo agent)
         {
-            throw new System.NotImplementedException();
+            var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"{agent.AgentUri}api/metrics/ram/available/all");
+
+            return CommonMetricsGetter(agent, httpRequest);
         }
     }
 }

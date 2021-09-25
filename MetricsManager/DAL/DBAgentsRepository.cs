@@ -19,6 +19,11 @@ namespace MetricsManager.DAL
             db.Commit();
         }
 
+        public void CreateSequence(IList<AgentInfo> item)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public void Delete(int id)
         {
             using var db = new LiteDatabase(_dbname);

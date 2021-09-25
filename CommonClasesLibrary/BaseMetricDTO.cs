@@ -6,5 +6,9 @@ namespace CommonClassesLibrary
     {
         public int Value { get; set; }
         public DateTime Time { get; set; }
+        //public BaseMetricDTO()
+        //{
+
+        //}
     }
 }

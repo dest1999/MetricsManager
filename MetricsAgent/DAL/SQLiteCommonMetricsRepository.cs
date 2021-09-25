@@ -51,7 +51,7 @@ namespace MetricsAgent.DAL
             connection.Execute($"DELETE FROM {_dbTableName} WHERE id=@{id}");
         }
 
-        public IList<BaseMetricValue> GetAllAndClearValues()
+        public IList<BaseMetricValue> GetAllAndClearTable()
         {
             using var connection = new SQLiteConnection(ConnectionString);
 
