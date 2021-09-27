@@ -26,24 +26,28 @@ namespace MetricsAgent.Controllers
             _mapper = mapper;
         }
 
-        [HttpPost("create")]
-        public IActionResult Create([FromBody] BaseMetricValue request)
-        {
-            _repository.Create(request);
-            return Ok();
-        }
-
+        /// <summary>
+        /// Получает метрики использования RAM за всё время использования
+        /// </summary>
+        /// <returns>
+        /// DTO использования RAM в коллекции
         [HttpGet("all")]
         public IActionResult GetAll()
         {
             return Ok(_mapper.Map<List<BaseMetricDTO>>(_repository.GetAllAndClearTable()));
         }
 
-        [HttpGet("from/{fromTime}/to/{toTime}")]
-        public IActionResult GetMetric([FromRoute] TimeSpan fromTime, [FromRoute] TimeSpan toTime)
-        {
-            _logger.LogInformation($"RamMetricsController GetMetric fromTime {fromTime}, toTime {toTime}");
-            return Ok();
-        }
+        //[HttpPost("create")]
+        //public IActionResult Create([FromBody] BaseMetricValue request)
+        //{
+        //    _repository.Create(request);
+        //    return Ok();
+        //}
+        //[HttpGet("from/{fromTime}/to/{toTime}")]
+        //public IActionResult GetMetric([FromRoute] TimeSpan fromTime, [FromRoute] TimeSpan toTime)
+        //{
+        //    _logger.LogInformation($"RamMetricsController GetMetric fromTime {fromTime}, toTime {toTime}");
+        //    return Ok();
+        //}
     }
 }

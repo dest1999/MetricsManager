@@ -17,6 +17,26 @@ namespace MetricsManager.Controllers
         {
             _logger = logger;
         }
+
+        /// <summary>
+        /// Получает метрики использования RAM за всё время использования
+        /// </summary>
+        /// <remarks>
+        /// Пример:
+        /// GET api/ram/metrics/agent/5
+        /// </remarks>
+        /// 
+        /// <returns>
+        /// Получает метрики использования RAM за всё время работы агента
+        /// </returns>
+        /// <param name="agentId">ID агента</param>
+        //за всё время
+        [HttpGet("agent/{agentId}")]
+        public IActionResult GetMetricsFromAgent([FromRoute] int agentId)
+        {
+            return Ok();
+        }
+
         //за период времени
         [HttpGet("agent/{agentId}/from/{fromTime}/to/{toTime}")]
         public IActionResult GetMetricsFromAgent([FromRoute] int agentId, [FromRoute] TimeSpan fromTime, [FromRoute] TimeSpan toTime)
@@ -30,14 +50,6 @@ namespace MetricsManager.Controllers
         {
             return Ok();
         }
-
-        //за всё время
-        [HttpGet("agent/{agentId}")]
-        public IActionResult GetMetricsFromAgent([FromRoute] int agentId)
-        {
-            return Ok();
-        }
-
         [HttpGet("cluster")]
         public IActionResult GetMetricsFromCluster()
         {

@@ -26,13 +26,13 @@ namespace MetricsAgent.Controllers
             _mapper = mapper;
         }
 
-        [HttpPost("create")]
-        public IActionResult Create([FromBody] BaseMetricValue request)
-        {
-            _repository.Create(request);
-            return Ok();
-        }
 
+        /// <summary>
+        /// Получает метрики загрузки процессора за всё время использования
+        /// </summary>
+        /// <returns>
+        /// DTO нагрузки процессора в коллекции
+        /// </returns>
         [HttpGet("all")]
         public IActionResult GetAll()
         {
@@ -40,7 +40,13 @@ namespace MetricsAgent.Controllers
             return Ok(returnCollection);
         }
 
-        #region //за период времени, скорее всего использоваться не будет
+        #region //методы скорее всего использоваться не будут
+        //[HttpPost("create")] неприменимо
+        //public IActionResult Create([FromBody] BaseMetricValue request)
+        //{
+        //    _repository.Create(request);
+        //    return Ok();
+        //}
 
         //за период времени
         //URL is: localhost:port/api/metrics/cpu/from/DD.HH:MM:SS/to/DD.HH:MM:SS

@@ -19,6 +19,7 @@ using Quartz;
 using Quartz.Impl;
 using MetricsAgent.Jobs;
 using System.IO;
+using System.Reflection;
 
 namespace MetricsAgent
 {
@@ -64,10 +65,13 @@ namespace MetricsAgent
             services.AddSingleton<IHddMetricsRepository, HddMetricsRepository>();
             services.AddSingleton<INetworkMetricsRepository, NetworkMetricsRepository>();
             services.AddSingleton<IRamMetricsRepository, RamMetricsRepository>();
-            //services.AddSwaggerGen(c =>
-            //{
-            //    c.SwaggerDoc("v1", new OpenApiInfo { Title = "MetricsAgent", Version = "v1" });
-            //});
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "MetricsAgent", Version = "v1" });
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+            });
         }
 
         private void ConfigureSqlLiteConnection(IServiceCollection services)
@@ -136,12 +140,12 @@ namespace MetricsAgent
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            //if (env.IsDevelopment())
-            //{
-            //    app.UseDeveloperExceptionPage();
-            //    app.UseSwagger();
-            //    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MetricsAgent v1"));
-            //}
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MetricsAgent v1"));
+            }
 
             app.UseHttpsRedirection();
 

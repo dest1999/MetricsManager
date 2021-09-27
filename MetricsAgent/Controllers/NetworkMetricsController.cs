@@ -26,13 +26,12 @@ namespace MetricsAgent.Controllers
             _mapper = mapper;
         }
 
-        [HttpPost("create")]
-        public IActionResult Create([FromBody] BaseMetricValue request)
-        {
-            _repository.Create(request);
-            return Ok();
-        }
-
+        /// <summary>
+        /// Получает метрики сетевого трафика за всё время использования
+        /// </summary>
+        /// <returns>
+        /// DTO сетевого трафика в коллекции
+        /// </returns>
         [HttpGet("all")]
         public IActionResult GetAll()
         {
@@ -40,11 +39,17 @@ namespace MetricsAgent.Controllers
         }
 
 
-        [HttpGet("from/{fromTime}/to/{toTime}")]
-        public IActionResult GetMetric([FromRoute] TimeSpan fromTime, [FromRoute] TimeSpan toTime)
-        {
-            _logger.LogInformation($"NetworkMetricsController GetMetric fromTime {fromTime}, toTime {toTime}");
-            return Ok();
-        }
+        //[HttpPost("create")]
+        //public IActionResult Create([FromBody] BaseMetricValue request)
+        //{
+        //    _repository.Create(request);
+        //    return Ok();
+        //}
+        //[HttpGet("from/{fromTime}/to/{toTime}")]
+        //public IActionResult GetMetric([FromRoute] TimeSpan fromTime, [FromRoute] TimeSpan toTime)
+        //{
+        //    _logger.LogInformation($"NetworkMetricsController GetMetric fromTime {fromTime}, toTime {toTime}");
+        //    return Ok();
+        //}
     }
 }
